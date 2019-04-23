@@ -256,7 +256,7 @@ var (
 	globalDeploymentID string
 
 	// GlobalGatewaySSE sse options
-	GlobalGatewaySSE gatewaySSE
+	// GlobalGatewaySSE gatewaySSE
 
 	// Add new variable global values here.
 )

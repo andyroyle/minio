@@ -22,6 +22,13 @@ import (
 	"github.com/gorilla/mux"
 )
 
+func newBlockStorageLayerFn() (layer BlockStorageLayer) {
+	globalObjLayerMutex.RLock()
+	layer = globalBlockStorageAPI
+	globalObjLayerMutex.RUnlock()
+	return
+}
+
 func newObjectLayerFn() (layer ObjectLayer) {
 	globalObjLayerMutex.RLock()
 	layer = globalObjectAPI
@@ -101,23 +108,23 @@ func configureServerHandler(endpoints EndpointList) (http.Handler, error) {
 	}
 
 	// Add STS router always.
-	registerSTSRouter(router)
+	// registerSTSRouter(router)
 
 	// Add Admin router, all APIs are enabled in server mode.
-	registerAdminRouter(router, true, true)
+	// registerAdminRouter(router, true, true)
 
 	// Add healthcheck router
-	registerHealthCheckRouter(router)
+	// registerHealthCheckRouter(router)
 
 	// Add server metrics router
-	registerMetricsRouter(router)
+	// registerMetricsRouter(router)
 
 	// Register web router when its enabled.
-	if globalIsBrowserEnabled {
-		if err := registerWebRouter(router); err != nil {
-			return nil, err
-		}
-	}
+	//if globalIsBrowserEnabled {
+	//	if err := registerWebRouter(router); err != nil {
+	//		return nil, err
+	//	}
+	//}
 
 	// Add API router, additionally all server mode support encryption.
 	registerAPIRouter(router, true)

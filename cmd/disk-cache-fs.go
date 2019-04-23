@@ -508,7 +508,7 @@ func (cfs *cacheFSObjects) moveBucketToTrash(ctx context.Context, bucket string)
 	}
 	// Cleanup all the bucket metadata.
 	ominioMetadataBucketDir := pathJoin(fs.fsPath, minioMetaBucket, bucketMetaPrefix, bucket)
-	nminioMetadataBucketDir := pathJoin(trashPath, MustGetUUID())
+	nminioMetadataBucketDir := pathJoin(trashPath, mustGetUUID())
 	logger.LogIf(ctx, fsRenameDir(ominioMetadataBucketDir, nminioMetadataBucketDir))
 	return nil
 }

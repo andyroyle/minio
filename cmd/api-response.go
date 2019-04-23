@@ -168,6 +168,35 @@ type ListBucketsResponse struct {
 	} // Buckets are nested
 }
 
+type VolumeAttachment struct {
+	VolumeId string `xml:"volumeId"`
+	InstanceId string `xml:"instanceId"`
+	Device string `xml:"device"`
+	Status string `xml:"status"`
+	AttachTime string `xml:"attachTime"`
+	DeleteOnTermination string `xml:"deleteOnTermination"`
+}
+
+type Volume struct {
+	VolumeId string `xml:"volumeId"`
+	Size int `xml:"size"`
+	SnapshotId string `xml:"snapshotId"`
+	AvailabilityZone string `xml:"availabilityZone"`
+	Status string `xml:"status"`
+	CreateTime string `xml:"createTime"`
+	AttachmentSet struct {
+		Volumes []VolumeAttachment `"xml:item""`
+	} `xml:"attachmentSet"`
+}
+
+type DescribeVolumesResponse struct {
+	XMLName xml.Name `xml:"http://ec2.amazonaws.com/doc/2016-11-15/ DescribeVolumesResponse" json:"-"`
+	RequestId string `xml:"requestId"`
+	VolumeSet struct {
+		Volumes []Volume `xml:"item"`
+	} `xml:"volumeSet"`
+}
+
 // Upload container for in progress multipart upload
 type Upload struct {
 	Key          string

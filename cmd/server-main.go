@@ -369,6 +369,7 @@ func serverMain(ctx *cli.Context) {
 
 	globalObjLayerMutex.Lock()
 	globalObjectAPI = newObject
+	globalBlockStorageAPI = newBlockStorageLayer()
 	globalObjLayerMutex.Unlock()
 
 	// Prints the formatted startup message once object layer is initialized.
@@ -396,4 +397,8 @@ func newObjectLayer(endpoints EndpointList) (newObject ObjectLayer, err error) {
 	}
 
 	return newXLSets(endpoints, format, len(format.XL.Sets), len(format.XL.Sets[0]))
+}
+
+func newBlockStorageLayer() (newBlockStorage BlockStorageLayer) {
+	return NewBlockStorageLayer()
 }
