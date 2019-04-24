@@ -49,10 +49,8 @@ const (
 type serviceType string
 
 const (
-	// serviceS3  serviceType = "s3"
-	serviceS3  serviceType = "ec2"
-	// serviceSTS serviceType = "sts"
-	serviceSTS serviceType = "ec2"
+	serviceS3  serviceType = "s3"
+	serviceSTS serviceType = "sts"
 	serviceEC2 serviceType = "ec2"
 )
 

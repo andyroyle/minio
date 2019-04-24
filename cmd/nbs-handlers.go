@@ -22,11 +22,14 @@ func (api blockStorageAPIHandlers) DescribeVolumesHandler(w http.ResponseWriter,
 
 	/*
 	 */
-	response, err := describeVolumes(ctx)
+	volumesInfo, err := describeVolumes(ctx)
 	if err != nil {
 		writeErrorResponse(ctx, w, toAPIError(ctx, err), r.URL, guessIsBrowserReq(r))
 		return
 	}
+
+	response := generateDescribeVolumesResponse(volumesInfo)
+	response.RequestId = w.Header().Get(responseRequestIDKey)
 
 	// Generate response.
 	// response := generateListBucketsResponse(bucketsInfo)

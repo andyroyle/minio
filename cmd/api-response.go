@@ -334,6 +334,16 @@ func getObjectLocation(r *http.Request, domains []string, bucket, object string)
 	return u.String()
 }
 
+func generateDescribeVolumesResponse(volumes []Volume) DescribeVolumesResponse {
+	var data = DescribeVolumesResponse{}
+
+	for _, volume := range volumes {
+		data.VolumeSet.Volumes = append(data.VolumeSet.Volumes, volume)
+	}
+
+	return data;
+}
+
 // generates ListBucketsResponse from array of BucketInfo which can be
 // serialized to match XML and JSON API spec output.
 func generateListBucketsResponse(buckets []BucketInfo) ListBucketsResponse {
