@@ -13,6 +13,11 @@ func (api blockStorageAPIHandlers) DescribeVolumesHandler(w http.ResponseWriter,
 		return
 	}
 
+	if err := reqSignatureV4Verify(r, globalServerConfig.GetRegion(), serviceEC2); err != ErrNone {
+		writeErrorResponse(ctx, w, errorCodes.ToAPIErr(err), r.URL, guessIsBrowserReq(r))
+		return
+	}
+
 	describeVolumes := blockStorageAPI.DescribeVolumes
 
 	/*
