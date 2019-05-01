@@ -169,32 +169,64 @@ type ListBucketsResponse struct {
 }
 
 type VolumeAttachment struct {
-	VolumeId string `xml:"volumeId"`
-	InstanceId string `xml:"instanceId"`
-	Device string `xml:"device"`
-	Status string `xml:"status"`
-	AttachTime string `xml:"attachTime"`
+	VolumeId            string `xml:"volumeId"`
+	InstanceId          string `xml:"instanceId"`
+	Device              string `xml:"device"`
+	Status              string `xml:"status"`
+	AttachTime          string `xml:"attachTime"`
 	DeleteOnTermination string `xml:"deleteOnTermination"`
 }
 
 type Volume struct {
-	VolumeId string `xml:"volumeId"`
-	Size int `xml:"size"`
-	SnapshotId string `xml:"snapshotId"`
-	AvailabilityZone string `xml:"availabilityZone"`
-	Status string `xml:"status"`
-	CreateTime string `xml:"createTime"`
-	AttachmentSet struct {
-		Volumes []VolumeAttachment `"xml:item""`
-	} `xml:"attachmentSet"`
+	VolumeId         string              `xml:"volumeId"`
+	Size             int                 `xml:"size"`
+	SnapshotId       string              `xml:"snapshotId"`
+	AvailabilityZone string              `xml:"availabilityZone"`
+	Status           string              `xml:"status"`
+	CreateTime       string              `xml:"createTime"`
+	VolumeType       string              `xml:"volumeType"`
+	AttachmentSet    VolumeAttachmentSet `xml:"attachmentSet"`
+}
+
+type VolumeAttachmentSet struct {
+	Volumes []VolumeAttachment `xml:"item"`
 }
 
 type DescribeVolumesResponse struct {
-	XMLName xml.Name `xml:"http://ec2.amazonaws.com/doc/2016-11-15/ DescribeVolumesResponse" json:"-"`
-	RequestId string `xml:"requestId"`
+	XMLName   xml.Name `xml:"http://ec2.amazonaws.com/doc/2016-11-15/ DescribeVolumesResponse" json:"-"`
+	RequestId string   `xml:"requestId"`
 	VolumeSet struct {
 		Volumes []Volume `xml:"item"`
 	} `xml:"volumeSet"`
+}
+
+type CreateVolumeResponse struct {
+	XMLName          xml.Name `xml:"http://ec2.amazonaws.com/doc/2016-11-15/ CreateVolumeResponse" json:"-"`
+	RequestId        string   `xml:"requestId"`
+	VolumeId         string   `xml:"volumeId"`
+	Size             int      `xml:"size"`
+	SnapshotId       string   `xml:"snapshotId"`
+	AvailabilityZone string   `xml:"availabilityZone"`
+	Status           string   `xml:"status"`
+	CreateTime       string   `xml:"createTime"`
+	VolumeType       string   `xml:"volumeType"`
+	Encrypted        bool     `xml:"encrypted"`
+}
+
+type DeleteVolumeResponse struct {
+	XMLName   xml.Name `xml:"http://ec2.amazonaws.com/doc/2016-11-15/ DeleteVolumeResponse" json:"-"`
+	RequestId string   `xml:"requestId"`
+	Return    bool     `xml:"return"`
+}
+
+type AttachVolumeResponse struct {
+	XMLName    xml.Name `xml:"http://ec2.amazonaws.com/doc/2016-11-15/ AttachVolumeResponse" json:"-"`
+	RequestId  string   `xml:"requestId"`
+	VolumeId   string   `xml:"volumeId"`
+	InstanceId string   `xml:"instanceId"`
+	Device     string   `xml:"device"`
+	Status     string   `xml:"status"`
+	AttachTime string   `xml:"attachTime"`
 }
 
 // Upload container for in progress multipart upload
@@ -334,6 +366,17 @@ func getObjectLocation(r *http.Request, domains []string, bucket, object string)
 	return u.String()
 }
 
+func generateCreateVolumeResponse(volume Volume) CreateVolumeResponse {
+	return CreateVolumeResponse{
+		VolumeId:         volume.VolumeId,
+		Size:             volume.Size,
+		SnapshotId:       volume.SnapshotId,
+		AvailabilityZone: volume.AvailabilityZone,
+		Status:           volume.Status,
+		CreateTime:       volume.CreateTime,
+	}
+}
+
 func generateDescribeVolumesResponse(volumes []Volume) DescribeVolumesResponse {
 	var data = DescribeVolumesResponse{}
 
@@ -341,7 +384,7 @@ func generateDescribeVolumesResponse(volumes []Volume) DescribeVolumesResponse {
 		data.VolumeSet.Volumes = append(data.VolumeSet.Volumes, volume)
 	}
 
-	return data;
+	return data
 }
 
 // generates ListBucketsResponse from array of BucketInfo which can be
